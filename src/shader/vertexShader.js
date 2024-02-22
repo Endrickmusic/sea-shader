@@ -3,6 +3,7 @@ attribute vec4 vertexPosition;
 
 uniform float uTime;
 uniform float uBigWaveElevation;
+uniform vec2 uBigWaveFrequency;
 
 varying vec2 vUv;
 varying vec3 vColor;
@@ -14,7 +15,7 @@ void main() {
 
     vec4 modelPosition = modelMatrix * vec4(position, 1.0);
     
-    float elevation = sin(modelPosition.x + uTime * .5) * uBigWaveElevation;
+    float elevation = sin(modelPosition.x * uBigWaveFrequency.x) * uBigWaveElevation;
 
     modelPosition.y = elevation; 
 
