@@ -1,21 +1,28 @@
 import { OrbitControls } from "@react-three/drei"
 import { useFrame, useThree } from "@react-three/fiber"
-import { useRef, useMemo } from "react"
+import { useRef, useMemo, useEffect } from "react"
+import { DoubleSide, Vector2 } from "three"
+import { useControls } from "leva"
 
 import vertexShader from "./shader/vertexShader.js"
 import fragmentShader from "./shader/fragmentShader.js"
-import { DoubleSide, Vector2 } from "three"
 
 
 export default function Shader(){
 
-    const meshRef = useRef();
-  
+    const meshRef = useRef()
+    const materialRef = useRef()
+
+    const options = useControls("What is this",{
+      BigWaveElevation: { value: 0.03, min: 0, max: 1, step: 0.01 }
+      })
+
     useFrame((state) => {
       let time = state.clock.getElapsedTime()
   
       // start from 20 to skip first 20 seconds ( optional )
       meshRef.current.material.uniforms.uTime.value = time
+      
     
     })
   
@@ -29,23 +36,43 @@ export default function Shader(){
           uResolution: {
             type: "v2",
             value: new Vector2(4, 3),
-            }
+            },
+          uBigWaveElevation: {
+              type: "f",
+              value: options.BigWaveElevation,
+              }
          }),[]
       )   
-      const viewport = useThree(state => state.viewport)
+
+      useEffect(
+        (state, delta) => {
+
+          console.log(materialRef.current.uniforms)
+          if (materialRef.current.uniforms) {
+            materialRef.current.uniforms.uBigWaveElevation.value = options.BigWaveElevation
+          }
+        },
+        [options]
+      )
+
+  const viewport = useThree(state => state.viewport)
+  
   return (
     <>
       <OrbitControls />    
       <mesh 
       ref={meshRef}
-      scale={[viewport.width, viewport.height, 1]}
+      scale={1}
+      rotation={[0.6*Math.PI, 0, 0]}
       >
-          <planeGeometry args={[1, 1]} />
+          <planeGeometry args={[1, 1, 128, 128]} />
           <shaderMaterial
+            ref={materialRef}
             uniforms={uniforms}
             vertexShader={vertexShader}
             fragmentShader={fragmentShader}
             side={DoubleSide}
+            wireframe={true}
           />
         </mesh>
    </>
