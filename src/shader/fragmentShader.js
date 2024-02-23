@@ -6,6 +6,8 @@ uniform sampler2D texture1;
 uniform vec4 uResolution;
 uniform vec3 uDepthColor;
 uniform vec3 uSurfaceColor;
+uniform float uColorOffset;
+uniform float uColorMultiplier;
 
 varying vec2 vUv;
 varying vec3 vPosition;
@@ -22,8 +24,10 @@ void main() {
 
     // Output to screen
     // gl_FragColor = vec4(col, 1.0);
-    // col = mix(vec3(0.0), vec3(1.0), vElevation * 5.0 + 0.5);
-    col = mix(uDepthColor, uSurfaceColor, vElevation * 5.0 + 0.5);
+    
+    float mixStrength = (vElevation + uColorOffset) * uColorMultiplier;
+
+    col = mix(uDepthColor, uSurfaceColor, mixStrength);
     gl_FragColor = vec4(col, 1.0);
 	#include <colorspace_fragment>
 }
