@@ -14,8 +14,9 @@ export default function Shader(){
     const materialRef = useRef()
 
     const options = useControls("What is this",{
-      BigWaveElevation: { value: 0.03, min: 0, max: 1, step: 0.001 },
-      BigWaveFrequency: { value: [4, 1.5] }
+      BigWaveElevation: { value: 0.15, min: 0, max: 1, step: 0.001 },
+      BigWaveFrequencyX: { value: 18, min: 0, max: 100, step: 0.01 },
+      BigWaveFrequencyY: { value: 15, min: 0, max: 100, step: 0.01 }
       })
 
     useFrame((state) => {
@@ -44,7 +45,7 @@ export default function Shader(){
               },
           uBigWaveFrequency: {
               type: "vec2",
-              value: new Vector2(options.BigWaveFrequency),
+              value: new Vector2(options.BigWaveFrequencyX, options.BigWaveFrequencyY),
               }
          }),[]
       )   
@@ -55,7 +56,8 @@ export default function Shader(){
           console.log(materialRef.current.uniforms)
           if (materialRef.current.uniforms) {
             materialRef.current.uniforms.uBigWaveElevation.value = options.BigWaveElevation
-            materialRef.current.uniforms.uBigWaveFrequency.value = options.BigWaveFrequency
+            materialRef.current.uniforms.uBigWaveFrequency.value.x = options.BigWaveFrequencyX
+            materialRef.current.uniforms.uBigWaveFrequency.value.y = options.BigWaveFrequencyY
           }
         },
         [options]
