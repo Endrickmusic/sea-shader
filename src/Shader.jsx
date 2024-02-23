@@ -1,7 +1,7 @@
 import { OrbitControls } from "@react-three/drei"
 import { useFrame, useThree } from "@react-three/fiber"
 import { useRef, useMemo, useEffect } from "react"
-import { DoubleSide, Vector2 } from "three"
+import { DoubleSide, Vector2, Color } from "three"
 import { useControls } from "leva"
 
 import vertexShader from "./shader/vertexShader.js"
@@ -12,11 +12,18 @@ export default function Shader(){
 
     const meshRef = useRef()
     const materialRef = useRef()
+    const debugObject = {}
 
-    const options = useControls("What is this",{
+    debugObject.depthColor = '#0000ff'
+    debugObject.surfaceColor = '#8888ff'
+
+    const options = useControls("Waves",{
       BigWaveElevation: { value: 0.15, min: 0, max: 1, step: 0.001 },
       BigWaveFrequencyX: { value: 18, min: 0, max: 100, step: 0.01 },
-      BigWaveFrequencyY: { value: 15, min: 0, max: 100, step: 0.01 }
+      BigWaveFrequencyY: { value: 15, min: 0, max: 100, step: 0.01 },
+      BigWaveSpeed: { value: 0.75, min: -1.5, max: 1.5, step: 0.01 },
+      DepthColor: { value: debugObject.depthColor },
+      SurfaceColor: { value: debugObject.surfaceColor },
       })
 
     useFrame((state) => {
@@ -46,6 +53,18 @@ export default function Shader(){
           uBigWaveFrequency: {
               type: "vec2",
               value: new Vector2(options.BigWaveFrequencyX, options.BigWaveFrequencyY),
+              },
+          uBigWaveSpeed: {
+              type: "f",
+              value: options.BigWaveSpeed,
+              },
+          uDepthColor: {
+              type: "color",
+              value: new Color(debugObject.depthColor),
+              },
+          uSurfaceColor: {
+              type: "color",
+              value: new Color(debugObject.surfaceColor),
               }
          }),[]
       )   
@@ -58,6 +77,9 @@ export default function Shader(){
             materialRef.current.uniforms.uBigWaveElevation.value = options.BigWaveElevation
             materialRef.current.uniforms.uBigWaveFrequency.value.x = options.BigWaveFrequencyX
             materialRef.current.uniforms.uBigWaveFrequency.value.y = options.BigWaveFrequencyY
+            materialRef.current.uniforms.uBigWaveSpeed.value = options.BigWaveSpeed
+            materialRef.current.uniforms.uDepthColor.value.set(options.DepthColor)
+            materialRef.current.uniforms.uSurfaceColor.value.set(options.SurfaceColor)
           }
         },
         [options]
