@@ -21,9 +21,9 @@ export default function Shader(){
 
       'Big Waves': folder({
       BigWaveElevation: { value: 0.13, min: 0, max: 1, step: 0.001 },
+      BigWaveSpeed: { value: 0.75, min: -1.5, max: 1.5, step: 0.01 }}),
       BigWaveFrequencyX: { value: 6.17, min: 0, max: 100, step: 0.01 },
       BigWaveFrequencyY: { value: 8.46, min: 0, max: 100, step: 0.01 },
-      BigWaveSpeed: { value: 0.75, min: -1.5, max: 1.5, step: 0.01 }}),
 
       'Small Waves': folder({
       SmallWaveElevation: { value: 0.06, min: 0, max: 1, step: 0.0001 },
