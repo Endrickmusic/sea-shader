@@ -2,7 +2,7 @@ import { OrbitControls } from "@react-three/drei"
 import { useFrame, useThree } from "@react-three/fiber"
 import { useRef, useMemo, useEffect } from "react"
 import { DoubleSide, Vector2, Color } from "three"
-import { useControls } from "leva"
+import { useControls, folder } from "leva"
 
 import vertexShader from "./shader/vertexShader.js"
 import fragmentShader from "./shader/fragmentShader.js"
@@ -17,24 +17,29 @@ export default function Shader(){
     debugObject.depthColor = '#4242c1'
     debugObject.surfaceColor = '#ffb700'
 
-    const options = useControls("Waves",{
+    const options = useControls("Ocean",{
+
+      'Big Waves': folder({
       BigWaveElevation: { value: 0.13, min: 0, max: 1, step: 0.001 },
       BigWaveFrequencyX: { value: 6.17, min: 0, max: 100, step: 0.01 },
       BigWaveFrequencyY: { value: 8.46, min: 0, max: 100, step: 0.01 },
-      BigWaveSpeed: { value: 0.75, min: -1.5, max: 1.5, step: 0.01 },
+      BigWaveSpeed: { value: 0.75, min: -1.5, max: 1.5, step: 0.01 }}),
 
+      'Small Waves': folder({
       SmallWaveElevation: { value: 0.06, min: 0, max: 1, step: 0.0001 },
       SmallWaveFrequency: { value: 7.26, min: 0, max: 100, step: 0.001 },
       SmallWaveSpeed: { value: 0.64, min: -4, max: 4, step: 0.01 },
-      SmallWaveIteration: { value: 4, min: 0, max: 7, step: 1 },
+      SmallWaveIteration: { value: 4, min: 0, max: 7, step: 1 }}),
 
+      'Colors': folder({
       DepthColor: { value: debugObject.depthColor },
       SurfaceColor: { value: debugObject.surfaceColor },
-      
-      Wireframe: false,
-      Linewidth: { value: 1, min: 0.5, max: 10, step: 0.1 },
       ColorOffset: { value: 0.2, min: -1.0, max: 1, step: 0.01 },
-      ColorMultiplier: { value: 2.9, min: 0.0, max: 15, step: 0.1 }
+      ColorMultiplier: { value: 2.9, min: 0.0, max: 15, step: 0.1 }}),
+
+      Wireframe: false,
+      Linewidth: { value: 1, min: 0.5, max: 10, step: 0.1 }
+      
       })
 
     useFrame((state) => {
@@ -137,7 +142,7 @@ export default function Shader(){
   
   return (
     <>
-      <OrbitControls />    
+      <OrbitControls />  
       <mesh 
       ref={meshRef}
       scale={1}
