@@ -2,7 +2,7 @@ import { RGBADepthPacking, MeshDepthMaterial, MathUtils, Vector2 } from "three"
 import { useEffect, useMemo } from "react"
 import { useFrame } from '@react-three/fiber'
 
-export default function modMaterial( {planeRef, onDepthMaterialUpdate, hovered} ) {
+export default function modMaterial( {options, planeRef, onDepthMaterialUpdate, hovered} ) {
 
     const customUniforms = useMemo(() => ({
         uTime: { value: 0 },
